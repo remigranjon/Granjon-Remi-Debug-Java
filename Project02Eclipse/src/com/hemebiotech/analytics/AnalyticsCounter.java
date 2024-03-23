@@ -3,11 +3,48 @@ package com.hemebiotech.analytics;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class AnalyticsCounter {
+	private final ISymptomReader reader;
+	private final ISymptomWriter writer;
 	private static int headacheCount = 0;	
 	private static int rashCount = 0;		
 	private static int pupilCount = 0;		
+	
+	public AnalyticsCounter(ISymptomReader reader,ISymptomWriter writer) {
+		this.reader = reader;
+		this.writer = writer;
+	}
+	
+	public List<String> getSymptoms(){
+		return reader.GetSymptoms();
+	}
+	
+	public Map<String,Integer> countSymptoms(List<String> symptoms){
+		Map<String,Integer> results = new HashMap<String,Integer>();
+		symptoms.forEach(symptom -> {
+			if (results.containsKey(symptom)) {
+				results.put(symptom, results.get(symptom)+1);
+			} else {
+				results.put(symptom, 1);
+			}
+		});
+		return results;
+	}
+	
+	public Map<String,Integer> sortSymptoms(Map<String,Integer> symptoms){
+		Map<String, Integer> sortedSymptoms = new TreeMap<>(symptoms);
+		return sortedSymptoms;
+	}
+	
+	public void writeSymptoms(Map<String,Integer> symptoms) {
+		writer.writeSymptoms(symptoms);
+	}
+	
 	
 	public static void main(String args[]) throws Exception {
 		// first get input

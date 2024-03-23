@@ -11,7 +11,7 @@ public class WriteSymptomDataToFile implements ISymptomWriter{
 	 * @param filepath a full or partial path to output file with occurrence of each symptom, one per line
 	 */
 	
-	public void WriteSymptomsToFile (String filepath) {
+	public WriteSymptomDataToFile (String filepath) {
 		this.filepath = filepath;
 	}
 	
