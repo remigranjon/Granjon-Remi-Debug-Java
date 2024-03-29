@@ -3,9 +3,13 @@ package com.hemebiotech.analytics;
 import java.io.*;
 import java.util.Map;
 
+/**
+ * Simple brute force implementation
+ *
+ */
 public class WriteSymptomDataToFile implements ISymptomWriter{
-	private String filepath;
 	
+	private String filepath;
 	/**
 	 * 
 	 * @param filepath a full or partial path to output file with occurrence of each symptom, one per line
@@ -17,11 +21,9 @@ public class WriteSymptomDataToFile implements ISymptomWriter{
 	
 	@Override
 	public void writeSymptoms(Map<String,Integer> symptoms) {
-		
 		if (filepath != null) {
 			try {
 				BufferedWriter writer = new BufferedWriter (new FileWriter(filepath));
-								
 				symptoms.forEach((symptom, occurrence) -> {
 					try {
 						writer.write(symptom+": "+occurrence+"\n");
@@ -29,13 +31,10 @@ public class WriteSymptomDataToFile implements ISymptomWriter{
 						e.printStackTrace();
 					}
 				});
-				
 				writer.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		
 	}
 }
