@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.hemebiotech.reader.ISymptomReader;
+import com.hemebiotech.writer.ISymptomWriter;
+
 /**
  * Class that contains methods that will be used in main in order to :
  * 	- read the list of symptoms
@@ -15,7 +18,7 @@ import java.util.TreeMap;
  * @author Rémi Granjon
  * @version 1.0, 29/03/24
  */
-public class AnalyticsCounter {
+public class AnalyticsCounter implements IAnalyticsCounter{
 	private final ISymptomReader reader;
 	private final ISymptomWriter writer;
 	
@@ -30,14 +33,6 @@ public class AnalyticsCounter {
 	}
 	
 	/**
-	 * Method that will get symptoms from any source basically calling the "getSymptoms" method of the attribute "reader" 
-	 * @return	the list of String that represents symptoms name read from source 
-	 */
-	public List<String> getSymptoms(){
-		return reader.getSymptoms();
-	}
-	
-	/**
 	 * Method that will count occurrences of each symptom name from a list of symptoms name
 	 * Starts from an empty HashMap and iterates over the symptoms list,
 	 * incrementing the value if a key corresponds 
@@ -45,6 +40,7 @@ public class AnalyticsCounter {
 	 * @param symptoms	a list of String  
 	 * @return	a Map of String keys and Integer values from which each value represents the count of occurrence of each key in the input parameter
 	 */
+	@Override
 	public Map<String,Integer> countSymptoms(List<String> symptoms){
 		Map<String,Integer> results = new HashMap<String,Integer>();
 		symptoms.forEach(symptom -> {
@@ -62,16 +58,18 @@ public class AnalyticsCounter {
 	 * @param symptoms	 an unsorted map of String keys and Integer values
 	 * @return	an alphabetically sorted map 
 	 */
+	@Override
 	public Map<String,Integer> sortSymptoms(Map<String,Integer> symptoms){
 		Map<String, Integer> sortedSymptoms = new TreeMap<>(symptoms);
 		return sortedSymptoms;
 	}
 	
+
 	/**
-	 * Method that will write symptoms on any medium
-	 * @param symptoms a map of String key and Integer values
+	 * Method that will execute methods in order to read, count, sort and write results 
 	 */
-	public void writeSymptoms(Map<String,Integer> symptoms) {
-		writer.writeSymptoms(symptoms);
+	@Override
+	public void execute () {
+		writer.writeSymptoms(sortSymptoms(countSymptoms(reader.getSymptoms())));
 	}
 }
